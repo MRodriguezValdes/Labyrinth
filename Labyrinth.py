@@ -1,6 +1,7 @@
 import os 
 import colorama as cl
 
+
 def print_maze_way (solution,maze):
     for i in range(len(maze)):
         for j in range(len(maze[i])):
@@ -13,6 +14,7 @@ def print_maze_way (solution,maze):
             print (cl.Fore.WHITE + "▅" ,end=" ")
         print()
 
+
 def generate_maze(blocks,rows,columns):
     maze = [[0]*columns for i in range(rows)]
     for i in range ( rows):
@@ -22,6 +24,8 @@ def generate_maze(blocks,rows,columns):
                 continue
             maze[i][j]=1
     return maze
+
+
 def print_maze(maze:list[list[int]]):
     for i in range(len(maze)):
             for j in range(len(maze[i])):
@@ -34,9 +38,12 @@ def print_maze(maze:list[list[int]]):
             
 def is_valid (maze,x,y):
     return x>=0 and y>=0 and x<len(maze) and y<len(maze[x]) and maze[x][y]==1
+
+
 def generate_desition_key(current_cell,desitions:dict):
     desitions.setdefault(current_cell,[])
     return desitions
+
 
 def posibilities(current_cell:tuple , maze,desitions):
     x,y=current_cell
@@ -58,7 +65,6 @@ def solve(maze):
     visited =[]
     desitions={}
     i_can_move =True
-    
     current_cell=(0,0)
     
     while current_cell!=(len(maze)-1,len(maze[0])-1) and i_can_move:
@@ -95,7 +101,7 @@ if __name__ == "__main__":
     columns= int(input("How many columns do you want: "))
     rows = int(input("How many rows do you want: "))
     print("*******************************************")
-    blocks=[(0,1),(2,1),(2,2),(2,3),(3,3),(1,3),(0,5),(4,0),(4,1),(4,2),(4,3),(5,0),(5,1),(5,2),(4,4)]
+    blocks=[(0,1),(2,1),(2,2),(2,3),(1,3),(0,5),(4,0),(4,1),(4,2),(4,3),(5,0),(5,1),(5,2),(3,3)]
     maze = generate_maze(blocks,rows,columns)
     print("------------------Maze------------------")
     print_maze(maze)
