@@ -58,7 +58,7 @@ def generate_maze(blocks:list[tuple[int,int]],rows:int,columns:int)->list[list[i
 ---
 ## Step 1:
 
-We need to generate as many directions as possible. When we are in x cell we unlock many movements or none, we also need to know what detions we have
+We need to generate as many directions as possible. When we are in x cell we unlock many movements or none, we also need to know what decision we have
 taken so as not to repeat it., but also the step that means going back we must take it as the last decision and exhaust all our possibilities. When we 
 have no more possible movements we return an invalid one. 
 
