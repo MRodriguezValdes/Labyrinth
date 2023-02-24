@@ -86,8 +86,8 @@ def solve(maze:list[list[int]] ,x:int,y:int ,endX:int,endY:int) -> tuple[list[in
     while  current_cell != (endX,endY) and i_can_move:
         
         #If you want to see all the steps to solve our maze, please uncomment this 
-        print_maze_way(desitions["way"],maze,(x,y),(endX,endY))
-        print("\n\n")
+        # print_maze_way(desitions["way"],maze,(x,y),(endX,endY))
+        # print("\n\n")
         
         next_cell:tuple = generate_next_movement(current_cell,maze,desitions)
         desitions[current_cell].append(next_cell)
