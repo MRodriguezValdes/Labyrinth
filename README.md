@@ -69,16 +69,16 @@ def generate_next_movement(current_cell:tuple[int,int] , maze:list[list[int]] ,d
     
     desitions.setdefault(current_cell,[])
 
-    if x!=len(maze)-1 and  not (x+1,y) in desitions[current_cell]  and not (x+1,y) in desitions['wait-desitions']:
+    if x!=len(maze)-1 and  not (x+1,y) in desitions[current_cell]  and not (x+1,y) in desitions:
         desitions['indications_of_movements'].append('Abajo')
         return (x+1,y)
-    if y!=len(maze[x])-1 and  not (x,y+1) in desitions[current_cell] and not (x,y+1) in desitions['wait-desitions']:
+    if y!=len(maze[x])-1 and  not (x,y+1) in desitions[current_cell] and not (x,y+1) in desitions:
         desitions['indications_of_movements'].append('Derecha')
         return (x,y+1)
-    if y>0 and  not (x,y-1) in desitions[current_cell] and not (x,y-1) in desitions['wait-desitions']:
+    if y>0 and  not (x,y-1) in desitions[current_cell] and not (x,y-1) in desitions:
         desitions['indications_of_movements'].append('Izquierda')
         return (x,y-1)
-    if x>0 and  not (x-1,y) in desitions[current_cell] and not (x-1,y) in desitions['wait-desitions']:
+    if x>0 and  not (x-1,y) in desitions[current_cell] and not (x-1,y) in desitions:
         desitions['indications_of_movements'].append('Arriba')
         return (x-1,y)
     return (-1,-1)
@@ -102,7 +102,7 @@ cell is not the exit or we have some movement.
 ```python
 def solve(maze:list[list[int]] ,x:int,y:int ,endX:int,endY:int) -> tuple[list[int],list[str]]:
     
-    desitions:dict={'indications_of_movements':['Salida'],'way':[(x,y)],'wait-desitions':[]}
+    desitions:dict={'indications_of_movements':['Salida'],'way':[(x,y)]}
     i_can_move:bool =True
     current_cell:tuple=(x,y)
 
@@ -110,8 +110,8 @@ def solve(maze:list[list[int]] ,x:int,y:int ,endX:int,endY:int) -> tuple[list[in
     while  current_cell != (endX,endY) and i_can_move:
         
         #If you want to see all the steps to solve our maze, please uncomment this 
-        # print_maze_way(desitions["way"],maze,(x,y),(endX,endY))
-        # print("\n\n")
+        print_maze_way(desitions["way"],maze,(x,y),(endX,endY))
+        print("\n\n")
         
         next_cell:tuple = generate_next_movement(current_cell,maze,desitions)
         desitions[current_cell].append(next_cell)
@@ -125,14 +125,13 @@ def solve(maze:list[list[int]] ,x:int,y:int ,endX:int,endY:int) -> tuple[list[in
             # We always want our last decision to be to go back, we need to implement any move first.
             else:
                 desitions[current_cell].pop()
-                desitions['wait-desitions'].append(next_cell)
                 desitions['indications_of_movements'].pop()
                 continue
         
         # If we do not have any movement, we check if our waiting list is empty and our first position on the road where it is the beginning is not eliminated. 
-        elif next_cell == (-1,-1) and len(desitions['wait-desitions'])!=0 and len(desitions['way']) > 1:
-            current_cell=desitions['wait-desitions'].pop()
+        elif next_cell == (-1,-1) and len(desitions['way']) > 1:
             desitions['way'].pop()
+            current_cell=desitions['way'][-1]
 
         # In this case we can't move      
         elif next_cell == (-1,-1):
@@ -144,4 +143,5 @@ def solve(maze:list[list[int]] ,x:int,y:int ,endX:int,endY:int) -> tuple[list[in
             desitions['indications_of_movements'].pop()
         
     return  desitions['way'],desitions['indications_of_movements']
+
 ```

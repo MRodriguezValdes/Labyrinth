@@ -61,16 +61,16 @@ def generate_next_movement(current_cell:tuple[int,int] , maze:list[list[int]] ,d
     
     desitions.setdefault(current_cell,[])
 
-    if x!=len(maze)-1 and  not (x+1,y) in desitions[current_cell]  and not (x+1,y) in desitions['wait-desitions']:
+    if x!=len(maze)-1 and  not (x+1,y) in desitions[current_cell]  and not (x+1,y) in desitions:
         desitions['indications_of_movements'].append('Abajo')
         return (x+1,y)
-    if y!=len(maze[x])-1 and  not (x,y+1) in desitions[current_cell] and not (x,y+1) in desitions['wait-desitions']:
+    if y!=len(maze[x])-1 and  not (x,y+1) in desitions[current_cell] and not (x,y+1) in desitions:
         desitions['indications_of_movements'].append('Derecha')
         return (x,y+1)
-    if y>0 and  not (x,y-1) in desitions[current_cell] and not (x,y-1) in desitions['wait-desitions']:
+    if y>0 and  not (x,y-1) in desitions[current_cell] and not (x,y-1) in desitions:
         desitions['indications_of_movements'].append('Izquierda')
         return (x,y-1)
-    if x>0 and  not (x-1,y) in desitions[current_cell] and not (x-1,y) in desitions['wait-desitions']:
+    if x>0 and  not (x-1,y) in desitions[current_cell] and not (x-1,y) in desitions:
         desitions['indications_of_movements'].append('Arriba')
         return (x-1,y)
     return (-1,-1)
@@ -78,7 +78,7 @@ def generate_next_movement(current_cell:tuple[int,int] , maze:list[list[int]] ,d
 
 def solve(maze:list[list[int]] ,x:int,y:int ,endX:int,endY:int) -> tuple[list[int],list[str]]:
     
-    desitions:dict={'indications_of_movements':['Salida'],'way':[(x,y)],'wait-desitions':[]}
+    desitions:dict={'indications_of_movements':['Salida'],'way':[(x,y)]}
     i_can_move:bool =True
     current_cell:tuple=(x,y)
 
@@ -86,8 +86,8 @@ def solve(maze:list[list[int]] ,x:int,y:int ,endX:int,endY:int) -> tuple[list[in
     while  current_cell != (endX,endY) and i_can_move:
         
         #If you want to see all the steps to solve our maze, please uncomment this 
-        # print_maze_way(desitions["way"],maze,(x,y),(endX,endY))
-        # print("\n\n")
+        print_maze_way(desitions["way"],maze,(x,y),(endX,endY))
+        print("\n\n")
         
         next_cell:tuple = generate_next_movement(current_cell,maze,desitions)
         desitions[current_cell].append(next_cell)
@@ -101,14 +101,13 @@ def solve(maze:list[list[int]] ,x:int,y:int ,endX:int,endY:int) -> tuple[list[in
             # We always want our last decision to be to go back, we need to implement any move first.
             else:
                 desitions[current_cell].pop()
-                desitions['wait-desitions'].append(next_cell)
                 desitions['indications_of_movements'].pop()
                 continue
         
         # If we do not have any movement, we check if our waiting list is empty and our first position on the road where it is the beginning is not eliminated. 
-        elif next_cell == (-1,-1) and len(desitions['wait-desitions'])!=0 and len(desitions['way']) > 1:
-            current_cell=desitions['wait-desitions'].pop()
+        elif next_cell == (-1,-1) and len(desitions['way']) > 1:
             desitions['way'].pop()
+            current_cell=desitions['way'][-1]
 
         # In this case we can't move      
         elif next_cell == (-1,-1):
@@ -125,14 +124,14 @@ def solve(maze:list[list[int]] ,x:int,y:int ,endX:int,endY:int) -> tuple[list[in
 
 if __name__ == "__main__":
     print(cl.Fore.YELLOW+"------------------Creating Maze------------------")
-    columns:int= int(input("How many columns do you want: "))
-    rows:int = int(input("How many rows do you want: "))
-    x_Start :int= int(input("X coordinate to the start: "))
-    y_Start:int = int(input("Y coordinate to the start: "))
-    x_End:int=int(input("X coordinate to the end: "))
-    y_End:int=int(input("Y coordinate to the end: "))
+    columns:int=5    #int(input("How many columns do you want: "))
+    rows:int = 6 #int(input("How many rows do you want: "))
+    x_Start :int=  3 #int(input("X coordinate to the start: "))
+    y_Start:int = 2  #int(input("Y coordinate to the start: "))
+    x_End:int= 5 #int(input("X coordinate to the end: "))
+    y_End:int= 3 #int(input("Y coordinate to the end: "))
     print(cl.Fore.YELLOW+"*******************************************")
-    blocks:list[tuple]=[(0,1),(2,1),(2,2),(2,3),(1,3),(0,5),(4,0),(4,2),(4,3),(5,0),(5,3),(3,3)]
+    blocks:list[tuple]=[(0,1),(2,1),(2,2),(2,3),(1,3),(0,5),(4,0),(4,2),(4,3),(5,0),(9,9),(4,4)]
     maze:list[list[int]] = generate_maze(blocks,rows,columns)
     print(cl.Fore.RED+"------------------Maze------------------")
     print_maze(maze,(x_Start,y_Start),(x_End,y_End))
